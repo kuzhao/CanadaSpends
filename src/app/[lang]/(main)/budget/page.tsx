@@ -17,6 +17,8 @@ import { BudgetSankey } from "@/components/Sankey/BudgetSankey";
 import { Trans } from "@lingui/react/macro";
 import { useState, useCallback } from "react";
 import { NewsItem, budgetNewsData } from "@/lib/budgetNewsData";
+import { IS_BUDGET_2025_LIVE } from "@/lib/featureFlags";
+import Link from "next/link";
 
 const StatBox = ({
   title,
@@ -146,26 +148,54 @@ export default function Budget() {
 
   return (
     <Page>
+      {/* Official Budget Banner - Only Show When Budget is Live */}
+      {IS_BUDGET_2025_LIVE && (
+        <div className="bg-indigo-950 text-white py-12 px-4 text-center">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl md:text-5xl font-bold mb-4">
+              <Trans>Official Fall 2025 Federal Budget Released</Trans>
+            </h2>
+            <Link
+              href="/budget"
+              className="inline-block bg-white text-indigo-950 hover:bg-gray-100 font-medium py-3 px-6 transition-colors"
+            >
+              <Trans>View Federal 2025 Budget Details</Trans>
+            </Link>
+          </div>
+        </div>
+      )}
+
       <PageContent>
         <Section>
           <H1>
             <Trans>Federal Fall 2025 Government Budget</Trans>
           </H1>
           <Intro>
-            <Trans>
-              The values you see here are based on the FY 2024 Budget with
-              preliminary updates based on government announcements, memos, and
-              leaks, and are meant to provide a rough idea of the budget. Once
-              the official Fall 2025 Budget is released on November 4th, we will
-              update this page to reflect the official budget.
-            </Trans>
+            {IS_BUDGET_2025_LIVE ? (
+              <Trans>
+                This page presents the official Fall 2025 Federal Budget as
+                released by the Government of Canada on November 4th, 2025. All
+                data is sourced directly from official government publications
+                and public accounts from the Government of Canada.
+              </Trans>
+            ) : (
+              <Trans>
+                The values you see here are based on the FY 2024 Budget with
+                preliminary updates based on government announcements, memos,
+                and leaks, and are meant to provide a rough idea of the budget.
+                Once the official Fall 2025 Budget is released on November 4th,
+                we will update this page to reflect the official budget.
+              </Trans>
+            )}
           </Intro>
         </Section>
         <Section>
           <H2>
             <Trans>Budget Statistics (Projected FY 2025)</Trans>
           </H2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-8 mb-8">
+          <div
+            className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 ${!IS_BUDGET_2025_LIVE ? "xl:grid-cols-5" : ""} gap-8 mb-8`}
+          >
             <StatBox
               title={<Trans>Total Budget</Trans>}
               value={`$${budgetData.spending.toFixed(1)}B`}
@@ -184,24 +214,28 @@ export default function Budget() {
                 459.5,
               )}
             />
-            <StatBox
-              title={<Trans>Operational Spend</Trans>}
-              value={`$${budgetData.opex2025.toFixed(1)}B`}
-              description={<Trans>Projected operational spending</Trans>}
-              growthPercentage={calculateGrowthPercentage(
-                budgetData.opex2025,
-                budgetData.opex2024,
-              )}
-            />
-            <StatBox
-              title={<Trans>Capital Investments</Trans>}
-              value={`$${budgetData.capex2025.toFixed(1)}B`}
-              description={<Trans>Projected capital investments</Trans>}
-              growthPercentage={calculateGrowthPercentage(
-                budgetData.capex2025,
-                budgetData.capex2024,
-              )}
-            />
+            {!IS_BUDGET_2025_LIVE && (
+              <>
+                <StatBox
+                  title={<Trans>Operational Spend</Trans>}
+                  value={`$${budgetData.opex2025.toFixed(1)}B`}
+                  description={<Trans>Projected operational spending</Trans>}
+                  growthPercentage={calculateGrowthPercentage(
+                    budgetData.opex2025,
+                    budgetData.opex2024,
+                  )}
+                />
+                <StatBox
+                  title={<Trans>Capital Investments</Trans>}
+                  value={`$${budgetData.capex2025.toFixed(1)}B`}
+                  description={<Trans>Projected capital investments</Trans>}
+                  growthPercentage={calculateGrowthPercentage(
+                    budgetData.capex2025,
+                    budgetData.capex2024,
+                  )}
+                />
+              </>
+            )}
             <StatBox
               title={<Trans>Deficit</Trans>}
               value={`$${budgetData.deficit.toFixed(1)}B`}

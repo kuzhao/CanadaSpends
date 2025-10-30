@@ -7,6 +7,7 @@ import { SankeyChart } from "./SankeyChart";
 import { SankeyData } from "./SankeyChartD3";
 import { Trans } from "@lingui/react/macro";
 import { H2, Section, PageContent } from "@/components/Layout";
+import { IS_BUDGET_2025_LIVE } from "@/lib/featureFlags";
 
 interface SpendingReductions {
   [key: string]: number; // Department Name -> Reduction Percentage
@@ -112,18 +113,19 @@ export function BudgetSankey({ onDataChange }: BudgetSankeyProps = {}) {
   const { t } = useLingui();
 
   // Grouped Spending Reductions (in percentages) - 9 Major Categories
+  // When Budget is Live, Set All Reductions to 0% to Use Official Budget Amounts from the Government of Canada
   const [spendingReductions, setSpendingReductions] =
     useState<SpendingReductions>({
-      Health: 7.5, // Health Research, Health Care Systems, Food Safety, Public Health
-      "Public Safety": 7.5, // CSIS, Corrections, RCMP, Justice System, Support for Veterans
-      "Social Services & Employment": 7.5, // Employment + Training, Housing Assistance, Gender Equality, Support for Veterans
-      "Economy + Innovation & Research": 7.5, // Investment/Growth/Commercialization, Research, Statistics Canada, Other Boards + Councils
-      "Immigration & Border Services": 7.5, // Border Security, Immigration Services, Settlement Assistance, Citizenship + Passports
-      "Government Operations": 7.5, // Public Services + Procurement, Government IT, Parliament, Privy Council, Treasury Board
-      "Culture & Official Languages": 7.5, // Official Languages + Culture
-      "Revenue & Tax Administration": 7.5, // Revenue Canada
+      Health: IS_BUDGET_2025_LIVE ? 0 : 7.5, // Health Research, Health Care Systems, Food Safety, Public Health
+      "Public Safety": IS_BUDGET_2025_LIVE ? 0 : 7.5, // CSIS, Corrections, RCMP, Justice System, Support for Veterans
+      "Social Services & Employment": IS_BUDGET_2025_LIVE ? 0 : 7.5, // Employment + Training, Housing Assistance, Gender Equality, Support for Veterans
+      "Economy + Innovation & Research": IS_BUDGET_2025_LIVE ? 0 : 7.5, // Investment/Growth/Commercialization, Research, Statistics Canada, Other Boards + Councils
+      "Immigration & Border Services": IS_BUDGET_2025_LIVE ? 0 : 7.5, // Border Security, Immigration Services, Settlement Assistance, Citizenship + Passports
+      "Government Operations": IS_BUDGET_2025_LIVE ? 0 : 7.5, // Public Services + Procurement, Government IT, Parliament, Privy Council, Treasury Board
+      "Culture & Official Languages": IS_BUDGET_2025_LIVE ? 0 : 7.5, // Official Languages + Culture
+      "Revenue & Tax Administration": IS_BUDGET_2025_LIVE ? 0 : 7.5, // Revenue Canada
       "Other Federal Programs": 0, // Spending Classified as "Off-Limits to Cuts"
-      "International Affairs": 7.5, // International Development, International Trade, International Cooperation, International Security, International Development, International Trade, International Cooperation, International Security
+      "International Affairs": IS_BUDGET_2025_LIVE ? 0 : 7.5, // International Development, International Trade, International Cooperation, International Security, International Development, International Trade, International Cooperation, International Security
     });
 
   // Mapping From Detailed Department Names to Broader Categories
@@ -1459,61 +1461,63 @@ export function BudgetSankey({ onDataChange }: BudgetSankeyProps = {}) {
       {/* Sankey Chart */}
       <SankeyChart data={data as SankeyData} />
 
-      {/* Spending Reduction Controls */}
-      <PageContent>
-        <Section>
-          <H2 className="text-white">
-            <Trans>Department Spending Reductions</Trans>
-          </H2>
-          <div className="mt-6 p-4 bg-blue-900 rounded-lg">
-            <p className="text-sm text-white">
-              <Trans>
-                Adjust sliders to see how department spending reductions affect
-                the overall Fall 2025 Budget. The Minister of Finance has asked
-                departments to reduce spending by 7.5% in 2026-27, 10% in
-                2027-28, and 15% in 2028-29.
-              </Trans>
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-            {Object.entries(spendingReductions)
-              .filter(([category]) => category !== "Other Federal Programs")
-              .map(([category, reduction]) => (
-                <div key={category} className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <label className="text-sm font-medium text-white">
-                      {category}
-                    </label>
-                    <span className="text-sm font-semibold text-white">
-                      {reduction}%
-                    </span>
+      {/* Spending Reduction Controls - Only Show When Budget is Not Live */}
+      {!IS_BUDGET_2025_LIVE && (
+        <PageContent>
+          <Section>
+            <H2 className="text-white">
+              <Trans>Department Spending Reductions</Trans>
+            </H2>
+            <div className="mt-6 p-4 bg-blue-900 rounded-lg">
+              <p className="text-sm text-white">
+                <Trans>
+                  Adjust sliders to see how department spending reductions
+                  affect the overall Fall 2025 Budget. The Minister of Finance
+                  has asked departments to reduce spending by 7.5% in 2026-27,
+                  10% in 2027-28, and 15% in 2028-29.
+                </Trans>
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+              {Object.entries(spendingReductions)
+                .filter(([category]) => category !== "Other Federal Programs")
+                .map(([category, reduction]) => (
+                  <div key={category} className="space-y-2">
+                    <div className="flex justify-between items-center">
+                      <label className="text-sm font-medium text-white">
+                        {category}
+                      </label>
+                      <span className="text-sm font-semibold text-white">
+                        {reduction}%
+                      </span>
+                    </div>
+                    <input
+                      type="range"
+                      min="0"
+                      max="15"
+                      step="0.5"
+                      value={reduction}
+                      onChange={(e) =>
+                        updateSpendingReduction(
+                          category,
+                          parseFloat(e.target.value),
+                        )
+                      }
+                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
+                      style={{
+                        background: `linear-gradient(to right, #3B82F6 0%, #3B82F6 ${(reduction / 15) * 100}%, #E5E7EB ${(reduction / 20) * 100}%, #E5E7EB 100%)`,
+                      }}
+                    />
+                    <div className="flex justify-between text-xs text-white">
+                      <span>0%</span>
+                      <span>15%</span>
+                    </div>
                   </div>
-                  <input
-                    type="range"
-                    min="0"
-                    max="15"
-                    step="0.5"
-                    value={reduction}
-                    onChange={(e) =>
-                      updateSpendingReduction(
-                        category,
-                        parseFloat(e.target.value),
-                      )
-                    }
-                    className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"
-                    style={{
-                      background: `linear-gradient(to right, #3B82F6 0%, #3B82F6 ${(reduction / 15) * 100}%, #E5E7EB ${(reduction / 20) * 100}%, #E5E7EB 100%)`,
-                    }}
-                  />
-                  <div className="flex justify-between text-xs text-white">
-                    <span>0%</span>
-                    <span>15%</span>
-                  </div>
-                </div>
-              ))}
-          </div>
-        </Section>
-      </PageContent>
+                ))}
+            </div>
+          </Section>
+        </PageContent>
+      )}
     </div>
   );
 }
