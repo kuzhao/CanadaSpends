@@ -113,6 +113,15 @@ export const MainLayout = ({ children }: { children: React.ReactNode }) => {
                       </Link>
                     </DropdownMenu.Item>
 
+                    <DropdownMenu.Item asChild>
+                      <Link
+                        href={`/${i18n.locale}/budget`}
+                        className="px-3 py-2 text-sm hover:bg-gray-100 rounded cursor-pointer"
+                      >
+                        <Trans>Budget</Trans>
+                      </Link>
+                    </DropdownMenu.Item>
+
                     <DropdownMenu.Sub>
                       <DropdownMenu.SubTrigger className="px-3 py-2 text-sm hover:bg-gray-100 rounded cursor-pointer flex items-center justify-between data-[highlighted]:bg-gray-100">
                         <Trans>Provincial</Trans>
