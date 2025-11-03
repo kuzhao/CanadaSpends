@@ -269,6 +269,16 @@ export const MainLayout = ({ children }: { children: React.ReactNode }) => {
               </span>
             </MobileNavLink>
 
+            <MobileNavLink
+              href={`/${i18n.locale}/budget`}
+              active={pathname.startsWith(`/${i18n.locale}/budget`)}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              <span className="pl-4 inline-block">
+                <Trans>Budget</Trans>
+              </span>
+            </MobileNavLink>
+
             {/* Provincial submenu */}
             <p className="px-3 pl-7 pt-2 text-sm font-medium text-gray-500">
               <Trans>Provincial</Trans>
