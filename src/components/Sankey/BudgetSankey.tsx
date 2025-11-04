@@ -446,7 +446,7 @@ export function BudgetSankey({ onDataChange }: BudgetSankeyProps = {}) {
         },
         {
           name: t`Net actuarial losses (gains)`,
-          amount2024: 7.6,
+          amount2024: 4.0,
           amount2025: 5.0,
         },
       ],
