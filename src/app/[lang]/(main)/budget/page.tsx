@@ -251,14 +251,14 @@ export default function Budget() {
           <NoSSR>
             <BudgetSankey onDataChange={handleBudgetDataChange} />
           </NoSSR>
-          {/* <div className="absolute bottom-3 left-6">
+          <div className="absolute bottom-3 left-6">
             <ExternalLink
               className="text-xs text-gray-400"
-              href="https://www.canada.ca/en/public-services-procurement/services/payments-accounting/public-accounts/2024.html"
+              href="https://budget.canada.ca/2025/report-rapport/pdf/budget-2025.pdf"
             >
               Source
             </ExternalLink>
-          </div> */}
+          </div>
           <div className="absolute top-0 left-0 w-[100vw] h-full  backdrop-blur-sm z-10 text-white md:hidden flex items-center justify-center">
             <ExternalLink
               className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
