@@ -89,8 +89,15 @@ const chartConfig = {
   },
 } as const;
 
-type SankeyChartProps = {
+// showDepartmentLinks: explicit opt-in so only contexts that want department
+// pages (currently the federal chart) render the "Learn more" links. Default
+// is false to avoid showing federal department links on provincial/municipal
+// charts where node labels map to local ministries/programs (which could be
+// incorrect or lead to broken navigation). Callers should pass
+// `showDepartmentLinks={true}` to enable links for that context.
+export type SankeyChartProps = {
   data: SankeyData;
+  showDepartmentLinks?: boolean;
 };
 
 export function SankeyChart(props: SankeyChartProps) {
@@ -277,7 +284,7 @@ export function SankeyChart(props: SankeyChartProps) {
                 )}
               </div>
             </div>
-            {hoverNode.departmentSlug && (
+            {hoverNode.departmentSlug && props.showDepartmentLinks && (
               <div className="node-tooltip-department">
                 <a
                   href={`/${i18n.locale}/spending/${hoverNode.departmentSlug}`}

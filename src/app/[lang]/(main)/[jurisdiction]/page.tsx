@@ -314,7 +314,10 @@ export default async function ProvinceIndex({
           </P>
         </Section>
         <div className="sankey-chart-container relative overflow-hidden sm:(mr-0 ml-0) md:(min-h-[776px] min-w-[1280px] w-screen -ml-[50vw] -mr-[50vw] left-1/2 right-1/2)">
-          <JurisdictionSankey data={sankey} />
+          <JurisdictionSankey
+            data={sankey}
+            jurisdictionSlug={jurisdiction.slug}
+          />
           <div className="absolute bottom-3 left-6">
             <ExternalLink
               className="text-xs text-gray-400"

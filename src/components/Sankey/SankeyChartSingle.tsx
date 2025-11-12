@@ -1,11 +1,11 @@
 import { useEffect, useRef } from "react";
 import { SankeyChartD3, SankeyChartD3Props } from "./SankeyChartD3";
 
-export type SankeyChartProps = {
+export type SankeyChartSingleProps = {
   id: string;
 } & SankeyChartD3Props;
 
-export function SankeyChartSingle(props: SankeyChartProps) {
+export function SankeyChartSingle(props: SankeyChartSingleProps) {
   const {
     id,
     data,

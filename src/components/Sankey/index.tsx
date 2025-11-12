@@ -799,5 +799,5 @@ export function Sankey() {
     );
   }, []);
 
-  return <SankeyChart data={data as SankeyData} />;
+  return <SankeyChart data={data as SankeyData} showDepartmentLinks={true} />;
 }

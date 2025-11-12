@@ -19,7 +19,10 @@ export default async function FullPageSpending({
   return (
     <div className="min-h-screen bg-white">
       <div className="sankey-chart-container relative overflow-hidden min-h-screen min-w-[1280px]">
-        <JurisdictionSankey data={sankey} />
+        <JurisdictionSankey
+          data={sankey}
+          jurisdictionSlug={jurisdiction.slug}
+        />
         <div className="absolute bottom-3 left-6">
           <ExternalLink
             className="text-xs text-gray-400"

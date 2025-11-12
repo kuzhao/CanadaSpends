@@ -9,11 +9,21 @@ function formatDepartmentAsSankey(department: Department): SankeyData {
     spending: department.totalSpending,
     revenue: 0,
     spending_data: {
+      id: `${department.slug}-spending-root`,
+      displayName: department.name,
       name: department.name,
       amount: department.totalSpending,
-      children: [...department.spending_data.children],
+      children: department.spending_data.children.map((c, i) => ({
+        id: `${department.slug}-spending-${i}`,
+        displayName: c.name,
+        name: c.name,
+        amount: c.amount,
+        children: [],
+      })),
     },
     revenue_data: {
+      id: `${department.slug}-revenue-root`,
+      displayName: `Revenue`,
       name: `Revenue`,
       amount: 0,
       children: [],
