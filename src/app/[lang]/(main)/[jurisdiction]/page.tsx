@@ -148,7 +148,7 @@ export default async function ProvinceIndex({
       key: "budget-balance",
       title: (
         <div className="flex items-center">
-          <Trans>Cash Surplus/Deficit</Trans>
+          <Trans>Surplus/Deficit</Trans>
           <Tooltip text="The difference between revenue and spending. A surplus indicates revenue exceeded spending.">
             <HelpIcon />
           </Tooltip>
