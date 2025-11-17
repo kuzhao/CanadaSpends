@@ -22,13 +22,13 @@ export const ONTARIO_BASIC_PERSONAL_AMOUNT = 12399;
 // 2024 Alberta basic personal amount
 export const ALBERTA_BASIC_PERSONAL_AMOUNT = 21885;
 
-// 2024 Federal tax brackets
+// 2025 Federal tax brackets
 export const FEDERAL_TAX_BRACKETS: TaxBracket[] = [
-  { min: 0, max: 55867, rate: 0.15 },
-  { min: 55867, max: 111733, rate: 0.205 },
-  { min: 111733, max: 173205, rate: 0.26 },
-  { min: 173205, max: 246752, rate: 0.29 },
-  { min: 246752, max: null, rate: 0.33 },
+  { min: 0, max: 57375, rate: 0.145 },
+  { min: 57375, max: 114750, rate: 0.205 },
+  { min: 114750, max: 177882, rate: 0.26 },
+  { min: 177882, max: 253414, rate: 0.29 },
+  { min: 253414, max: null, rate: 0.33 },
 ];
 
 // 2024 Ontario provincial tax brackets
@@ -78,8 +78,8 @@ export function calculateFederalTax(income: number): number {
     FEDERAL_TAX_BRACKETS,
   );
 
-  // Step 2: Apply BPA as a credit (15% of BPA)
-  const bpaCredit = FEDERAL_BASIC_PERSONAL_AMOUNT * 0.15;
+  // Step 2: Apply BPA as a credit (14.5% of BPA - lowest federal rate)
+  const bpaCredit = FEDERAL_BASIC_PERSONAL_AMOUNT * 0.145;
 
   // Step 3: Subtract the credit from the calculated tax
   return Math.max(0, taxOnFullIncome - bpaCredit);
